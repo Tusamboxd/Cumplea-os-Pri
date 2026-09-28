@@ -31,10 +31,23 @@ function checkPasscode() {
     
     lanzarConfetti();
 
+    // REPRODUCCIÓN MEJORADA DE AUDIO
     const audio = document.getElementById('birthday-song');
-    audio.play().catch(error => {
-      console.log("Error al reproducir audio:", error);
-    });
+    audio.volume = 1.0;
+    
+    // Intenta reproducir de inmediato
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.log("Autoplay bloqueado. Esperando toque de usuario...", error);
+        // Si el navegador bloquea la reproducción automática, reproduce al hacer clic en cualquier lugar
+        document.body.addEventListener('click', function playOnClick() {
+          audio.play();
+          document.body.removeEventListener('click', playOnClick);
+        }, { once: true });
+      });
+    }
   } else {
     errorMsg.textContent = "❌ Clave incorrecta. ¡Piensa bien! 😉";
     document.getElementById('passcode').value = "";
