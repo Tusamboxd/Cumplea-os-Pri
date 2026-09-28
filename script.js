@@ -12,7 +12,7 @@ var photos = [
 
 let currentPhotoIndex = 0;
 
-// PRECARGA DE IMÁGENES (Evita demoras al pasar las fotos)
+// PRECARGA DE IMÁGENES
 function preloadImages() {
   photos.forEach((src) => {
     const img = new Image();
@@ -26,28 +26,29 @@ function checkPasscode() {
   const errorMsg = document.getElementById('error-msg');
 
   if (input === CORRECT_CODE) {
-    // 1. Ocultar caja fuerte y mostrar sorpresa
     document.getElementById('lock-screen').classList.add('hidden');
     document.getElementById('secret-screen').classList.remove('hidden');
     
-    // 2. Disparar el confeti
     lanzarConfetti();
 
-    // 3. REPRODUCCIÓN AUTOMÁTICA INMEDIATA
+    // REPRODUCCIÓN REFORZADA PARA MÓVILES
     const audio = document.getElementById('birthday-song');
-    audio.volume = 1.0;
+    audio.load(); // Fuerza la carga del archivo MP3
+    audio.currentTime = 0;
     
-    // Forzar inicio de reproducción aprovechando el clic en "Desbloquear"
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise.catch(error => {
-        console.log("El navegador intentó bloquear la música:", error);
-        // Si el celular es muy estricto, intenta sonar al tocar cualquier parte de la pantalla
-        document.addEventListener('touchstart', function playOnTouch() {
+    // Ejecuta la reproducción aprovechando el clic en el botón
+    const promise = audio.play();
+    if (promise !== undefined) {
+      promise.catch(error => {
+        console.log("Bloqueo de audio detectado:", error);
+        // Respaldo por si el teléfono requiere tocar la pantalla de la sorpresa
+        const playOnTouch = () => {
           audio.play();
+          document.removeEventListener('click', playOnTouch);
           document.removeEventListener('touchstart', playOnTouch);
-        }, { once: true });
+        };
+        document.addEventListener('click', playOnTouch);
+        document.addEventListener('touchstart', playOnTouch);
       });
     }
 
