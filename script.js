@@ -26,28 +26,31 @@ function checkPasscode() {
   const errorMsg = document.getElementById('error-msg');
 
   if (input === CORRECT_CODE) {
+    // 1. Ocultar caja fuerte y mostrar sorpresa
     document.getElementById('lock-screen').classList.add('hidden');
     document.getElementById('secret-screen').classList.remove('hidden');
     
+    // 2. Disparar el confeti
     lanzarConfetti();
 
-    // REPRODUCCIÓN MEJORADA DE AUDIO
+    // 3. REPRODUCCIÓN AUTOMÁTICA INMEDIATA
     const audio = document.getElementById('birthday-song');
     audio.volume = 1.0;
     
-    // Intenta reproducir de inmediato
+    // Forzar inicio de reproducción aprovechando el clic en "Desbloquear"
     const playPromise = audio.play();
     
     if (playPromise !== undefined) {
       playPromise.catch(error => {
-        console.log("Autoplay bloqueado. Esperando toque de usuario...", error);
-        // Si el navegador bloquea la reproducción automática, reproduce al hacer clic en cualquier lugar
-        document.body.addEventListener('click', function playOnClick() {
+        console.log("El navegador intentó bloquear la música:", error);
+        // Si el celular es muy estricto, intenta sonar al tocar cualquier parte de la pantalla
+        document.addEventListener('touchstart', function playOnTouch() {
           audio.play();
-          document.body.removeEventListener('click', playOnClick);
+          document.removeEventListener('touchstart', playOnTouch);
         }, { once: true });
       });
     }
+
   } else {
     errorMsg.textContent = "❌ Clave incorrecta. ¡Piensa bien! 😉";
     document.getElementById('passcode').value = "";
