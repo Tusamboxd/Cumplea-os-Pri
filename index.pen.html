@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Feliz Cumpleaños, Mi Amor!</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Librería de Confeti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- PANTALLA 1: CAJA FUERTE -->
+  <div id="lock-screen" class="card">
+    <div class="icon">🔒</div>
+    <h2>Caja Fuerte de Cumpleaños</h2>
+    <p>Introduce nuestra clave secreta para desbloquear tu sorpresa:</p>
+    <p class="hint"><i>Pista: Es el lugar donde nos vimos por primera vez</i></p>
+
+    <input type="password" id="passcode" placeholder="----" maxlength="11">
+    <button onclick="checkPasscode()">Desbloquear</button>
+    
+    <p id="error-msg" class="error"></p>
+  </div>
+
+  <!-- PANTALLA 2: SORPRESA -->
+  <div id="secret-screen" class="card hidden">
+    <div class="icon">🎉</div>
+    <h1>¡FELIZ CUMPLEAÑOS! ❤️</h1>
+    <p class="subtitle">¡Has abierto tu regalo digital!</p>
+
+    <!-- GALERÍA DE FOTOS -->
+    <div class="gallery-container">
+      <img id="gallery-img" src="https://i.postimg.cc/yWqR2SKT/6b7adb86-721a-440e-a557-065a4ac1c749.jpg" alt="Foto especial">
+      <div class="gallery-controls">
+        <button class="nav-btn" onclick="changePhoto(-1)">❮ Anterior</button>
+        <span id="photo-counter">1 / 5</span>
+        <button class="nav-btn" onclick="changePhoto(1)">Siguiente ❯</button>
+      </div>
+    </div>
+
+    <!-- CARTA -->
+    <div class="letter">
+      <p>Mi amor,</p>
+      <p>
+        Quería prepararte algo especial por tu cumpleaños y especialmente para empezar tu día con una sonrisa. 
+        Gracias por cada momento, cada risa y por hacer mi vida mucho más bonita, contigo todo es más bonito, me siento en paz con cada abrazo tuyo y puedo decir con certeza que mi hogar eres tú.
+      Te amo mucho mi Pri hermosa, te amo como no tienes idea, desde que te conocí, las canciones de amor tienen sentido, tengo en quién pensar cada que las escucho y tambien a quien dedicárselas.
+        Te amo a pesar de los problemas que podamos tener, por que de eso se trata, no vamos a terminar por algún problema que sabemos perfectamente se puede solucionar. Por que, como te dije, ¿Por qué estar con alguien si no es para toda la vida?.
+        Te amo muchísimo mi niña hermosa, espero que pases un muy felíz cumpleaños el día de hoy. Me siento muy afortunado de poder decir que soy tu novio y estoy seguro que este es el primero de muchísimos más cumpleaños juntos.
+        Te amo 3 000 000, mi Bobocha 💗.
+      </p>
+      <p class="signature">Con todo mi amor,<br><strong>Tu Bobocho</strong></p>
+    </div>
+
+    <!-- AUDIO MP3 -->
+    <audio id="birthday-song" loop preload="auto">
+      <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <button onclick="lanzarConfetti()">🎈 Llenar de confeti 🎈</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
