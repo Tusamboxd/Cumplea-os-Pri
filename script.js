@@ -22,33 +22,35 @@ function preloadImages() {
 preloadImages();
 
 function checkPasscode() {
-  const input = document.getElementById('passcode').value;
+  const input = document.getElementById('passcode').value.trim();
   const errorMsg = document.getElementById('error-msg');
 
-  if (input === CORRECT_CODE) {
+  // Compara sin importar mayúsculas/minúsculas
+  if (input.toLowerCase() === CORRECT_CODE.toLowerCase()) {
     document.getElementById('lock-screen').classList.add('hidden');
     document.getElementById('secret-screen').classList.remove('hidden');
     
     lanzarConfetti();
 
-    // REPRODUCCIÓN REFORZADA PARA MÓVILES
+    // REPRODUCCIÓN DIRECTA DE AUDIO
     const audio = document.getElementById('birthday-song');
-    audio.load(); // Fuerza la carga del archivo MP3
-    audio.currentTime = 0;
+    audio.volume = 1.0;
     
-    // Ejecuta la reproducción aprovechando el clic en el botón
-    const promise = audio.play();
-    if (promise !== undefined) {
-      promise.catch(error => {
-        console.log("Bloqueo de audio detectado:", error);
-        // Respaldo por si el teléfono requiere tocar la pantalla de la sorpresa
-        const playOnTouch = () => {
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.log("Autoplay bloqueado por el navegador:", error);
+        
+        // Función de respaldo si el móvil bloquea el inicio automático
+        const playOnInteraction = () => {
           audio.play();
-          document.removeEventListener('click', playOnTouch);
-          document.removeEventListener('touchstart', playOnTouch);
+          document.removeEventListener('click', playOnInteraction);
+          document.removeEventListener('touchstart', playOnInteraction);
         };
-        document.addEventListener('click', playOnTouch);
-        document.addEventListener('touchstart', playOnTouch);
+        
+        document.addEventListener('click', playOnInteraction);
+        document.addEventListener('touchstart', playOnInteraction);
       });
     }
 
@@ -74,6 +76,11 @@ function lanzarConfetti() {
   });
 }
 
+document.getElementById('passcode').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    checkPasscode();
+  }
+});
 document.getElementById('passcode').addEventListener('keypress', function (e) {
   if (e.key === 'Enter') {
     checkPasscode();
